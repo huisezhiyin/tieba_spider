@@ -17,7 +17,6 @@ class Spiders():
         self.exclude_2 = u"蹲"
         self.exclude_3 = u"换"
         self.all_page = all_page
-        self.check_list = []
 
     def html_processor(self):
         html_list = []
@@ -44,6 +43,7 @@ class Spiders():
 
     def post_processor(self, post_urls):
         l = []
+        check_list = []
         response = requests.get(post_urls)
         soup = BeautifulSoup(response.content, "lxml")
         try:
@@ -79,9 +79,9 @@ class Spiders():
                             s = i.get_text()
                         except:
                             s = i.encode("utf-8")
-                        if s in self.check_list:
+                        if s in check_list:
                             continue
-                        self.check_list.append(s)
+                        check_list.append(s)
                         s = "{0},{1},{2}".format(s, u, string.encode("utf8"))
                         l.append(s)
         return l
