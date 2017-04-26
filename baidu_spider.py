@@ -17,6 +17,7 @@ class Spiders():
         self.exclude_2 = u"蹲"
         self.exclude_3 = u"换"
         self.all_page = all_page
+        self.check_list = []
 
     def html_processor(self):
         html_list = []
@@ -78,9 +79,11 @@ class Spiders():
                             s = i.get_text()
                         except:
                             s = i.encode("utf-8")
+                        if s in self.check_list:
+                            continue
+                        self.check_list.append(s)
                         s = "{0},{1},{2}".format(s, u, string.encode("utf8"))
                         l.append(s)
-        l = set(l)
         return l
 
 
@@ -103,4 +106,4 @@ if __name__ == '__main__':
     end = datetime.datetime.now()
     print "start @ {0}".format(start)
     print "end @ {0}".format(end)
-    print "all cost {0}".format(end -start)
+    print "all cost {0}".format(end - start)
