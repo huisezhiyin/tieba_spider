@@ -79,6 +79,7 @@ class Spiders():
                             s = i.get_text()
                         except:
                             s = i.encode("utf-8")
+                        s = s.strip()
                         if s in check_list:
                             continue
                         check_list.append(s)
