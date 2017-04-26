@@ -1,0 +1,14 @@
+*.DS_Store
+conf/db.cnf
+conf/key.txt
+bin/
+lib/
+include/
+*.pyc
+*.log
+logs/access.log
+*idea*
+gunicorn.sh
+.Python
+pip-selfcheck.json
+logs/
