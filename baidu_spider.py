@@ -3,9 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import random
-import datetime
-import re
 import time
+import re
+import datetime
 
 
 class Spiders():
@@ -60,28 +60,28 @@ class Spiders():
             response = requests.get(u)
             soup = BeautifulSoup(response.content, "lxml")
             reply_list = soup.find_all(class_="d_post_content_main ")
+            n = 0
             for reply in reply_list:
+                n += 1
                 tmp = reply.find_all(class_="d_post_content j_d_post_content ")[0]
                 tmp2 = reply.find_all('span', class_="tail-info")
                 string = u""
                 for t in tmp2:
-                    string += (t.get_text() + u"#")
-                try:
-                    d = re.search(r'(\d{4}-\d{2}-\d{2})', string).group(1)
-                    d = datetime.datetime.strptime(d, "%Y-%m-%d").date()
-                    if d < datetime.date(2017, 4, 18):
-                        continue
-                except:
-                    pass
+                    string += t.get_text()
+                d = re.search(r'(\d{4}-\d{2}-\d{2})', string).group(1)
+                d = datetime.datetime.strptime(d, "%Y-%m-%d").date()
+                if d < datetime.date(2017, 4, 15):
+                    continue
                 for i in tmp.contents:
                     if self.key_word in i and self.key_word_2 in i:
                         if self.exclude_1 in i or self.exclude_2 in i or self.exclude_3 in i:
                             continue
+                        print u"第{0}条回复".format(n)
                         try:
                             s = i.get_text()
                         except:
                             s = i.encode("utf-8")
-                        s = "{0},{1},{2}".format(s, u, string)
+                        s = "{0},{1},{2}".format(s, u, string.encode("utf8"))
                         l.append(s)
         l = set(l)
         return l
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     s = Spiders()
     html_list = s.html_processor()
     page = 0
-    with open("/Users/grey/Desktop/tmp.txt", "a") as f:
+    with open("/Users/grey/Desktop/tmp2.txt", "a") as f:
         for html in html_list:
             page += 1
             post_url_list = s.post_url_processor(html)
@@ -101,5 +101,5 @@ if __name__ == '__main__':
                 print u"第{0}页 第{1}个帖子".format(page, post)
                 key_list = s.post_processor(post_url)
                 for key in key_list:
-                    f.write(key.replace(" ", ""))
+                    f.write(key.strip())
                     f.write("\n\n")
