@@ -25,7 +25,6 @@ class Spiders():
             thread_urls = "http://tieba.baidu.com/f?kw=%E5%89%91%E7%BD%91%E4%B8%89%E4%BA%A4%E6%98%93&ie=utf-8&pn={0}".format(
                 pn)
             s = random.randint(1, 5)
-            print page + 1
             time.sleep(s)
             response = requests.get(thread_urls)
             html_list.append(response.content)
@@ -56,7 +55,6 @@ class Spiders():
             page += 1
             time.sleep(random.randint(1, 5))
             u = "{0}?pn={1}".format(post_urls, page)
-            print u"第{0}/{1}页".format(page, page_last_num)
             response = requests.get(u)
             soup = BeautifulSoup(response.content, "lxml")
             reply_list = soup.find_all(class_="d_post_content_main ")
@@ -76,7 +74,6 @@ class Spiders():
                     if self.key_word in i and self.key_word_2 in i:
                         if self.exclude_1 in i or self.exclude_2 in i or self.exclude_3 in i:
                             continue
-                        print u"第{0}条回复".format(n)
                         try:
                             s = i.get_text()
                         except:
@@ -88,18 +85,22 @@ class Spiders():
 
 
 if __name__ == '__main__':
+    start = datetime.datetime.now()
     s = Spiders()
     html_list = s.html_processor()
     page = 0
-    with open("/Users/grey/Desktop/tmp2.txt", "a") as f:
-        for html in html_list:
-            page += 1
-            post_url_list = s.post_url_processor(html)
-            post = 0
-            for post_url in post_url_list:
-                post += 1
-                print u"第{0}页 第{1}个帖子".format(page, post)
+    for html in html_list:
+        page += 1
+        post_url_list = s.post_url_processor(html)
+        post = 0
+        for post_url in post_url_list:
+            post += 1
+            with open("tmp.txt", "a") as f:
                 key_list = s.post_processor(post_url)
                 for key in key_list:
                     f.write(key.strip())
                     f.write("\n\n")
+    end = datetime.datetime.now()
+    print "start @ {0}".format(start)
+    print "end @ {0}".format(end)
+    print "all cost {0}".format(end -start)
