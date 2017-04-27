@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import re
+import time
 import datetime
 import Levenshtein
 
@@ -30,6 +31,7 @@ class Spiders(object):
             thread_urls = "http://tieba.baidu.com/f?kw=%E5%89%91%E7%BD%91%E4%B8%89%E4%BA%A4%E6%98%93&ie=utf-8&pn={0}".format(
                 pn)
             response = requests.get(thread_urls)
+            time.sleep(1)
             html_list.append(response.content)
         return html_list
 
@@ -47,6 +49,7 @@ class Spiders(object):
 
     def post_processor(self, post_urls):
         # 根据post_url 处理一个帖子并返回所有契合关键字的内容
+        time.sleep(1)
         if len(self.key_word_list) == 0:
             raise Exception("key_word_list can`t be none")
         result_list = []
@@ -101,11 +104,13 @@ class Spiders(object):
 
     def main_processor(self):
         html_list = self.html_processor()
+        d = datetime.datetime.now()
         for html in html_list:
             post_url_list = self.post_url_processor(html)
             for post_url in post_url_list:
                 result_list = self.post_processor(post_url)
-                with open("result_{0}.txt".format(datetime.datetime.now()), "a") as f:
+
+                with open("result_{0}.txt".format(d), "a") as f:
                     for result in result_list:
                         f.write(result.strip())
                         f.write("\n\n")
