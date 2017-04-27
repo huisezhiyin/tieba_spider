@@ -68,8 +68,11 @@ class Spiders(object):
             soup = BeautifulSoup(response.content, "lxml")
             reply_list = soup.find_all(class_="d_post_content_main ")
             for reply in reply_list:
-                tmp = reply.find_all(class_="d_post_content j_d_post_content ")[0]
-                tmp2 = reply.find_all('span', class_="tail-info")
+                try:
+                    tmp = reply.find_all(class_="d_post_content j_d_post_content ")[0]
+                    tmp2 = reply.find_all('span', class_="tail-info")
+                except:
+                    continue
                 string = u""
                 for t in tmp2:
                     string += t.get_text()
