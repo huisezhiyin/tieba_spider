@@ -85,6 +85,12 @@ class Spiders(object):
                             break
                     if mark:
                         continue
+                    for exclude_word in self.exclude_word_list:
+                        if exclude_word in content:
+                            mark = True
+                            break
+                    if mark:
+                        continue
                     try:
                         reply_content = content.get_text()
                     except:
@@ -109,7 +115,6 @@ class Spiders(object):
             post_url_list = self.post_url_processor(html)
             for post_url in post_url_list:
                 result_list = self.post_processor(post_url)
-
                 with open("result_{0}.txt".format(d), "a") as f:
                     for result in result_list:
                         f.write(result.strip())
