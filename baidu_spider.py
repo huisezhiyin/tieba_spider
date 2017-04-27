@@ -118,7 +118,7 @@ class Spiders(object):
             post_url_list = self.post_url_processor(html)
             for post_url in post_url_list:
                 result_list = self.post_processor(post_url)
-                with open("result_{0}.txt".format(d), "a") as f:
+                with open("result/result_{0}.txt".format(d), "a") as f:
                     for result in result_list:
                         f.write(result.strip())
                         f.write("\n\n")

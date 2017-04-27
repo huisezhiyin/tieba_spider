@@ -2,3 +2,6 @@ requests
 bs4
 lxml
 python-Levenshtein
+pyopenssl
+ndg-httpsclient
+pyasn

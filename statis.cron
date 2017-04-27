@@ -1,0 +1,1 @@
+30 * * * * nohup /home/statis/baidu/bin/python /home/statis/baidu/baidu_spiders/baidu_spider.py &
