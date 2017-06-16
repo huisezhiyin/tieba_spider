@@ -6,6 +6,7 @@ import re
 import time
 import datetime
 import Levenshtein
+import os
 
 
 class Spiders(object):
@@ -111,6 +112,9 @@ class Spiders(object):
         return result_list
 
     def main_processor(self):
+        #检查文件夹
+        if not os.path.exists("result"):
+            os.makedirs("result")
         html_list = self.html_processor()
         d = datetime.datetime.now()
         html_mark = 0
