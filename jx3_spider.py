@@ -117,7 +117,10 @@ class Spiders(object):
         if not os.path.exists("result"):
             os.makedirs("result")
         html_list = self.html_processor()
-        d = datetime.datetime.now()
+        title_time = "".format(datetime.datetime.now()).replace(" ","")
+        title_word = u""
+        for i in self.key_word_list:
+            title_word += i
         html_mark = 0
         for html in html_list:
             html_mark += 1
@@ -128,7 +131,7 @@ class Spiders(object):
                 post_mark += 1
                 print "post schedule: {0}/{1}".format(post_mark, len(post_url_list))
                 result_list = self.post_processor(post_url)
-                with open("result/result_{0}.txt".format(d), "a") as f:
+                with open("result/result_{0}_{1}.txt".format(title_word,title_time), "a") as f:
                     for result in result_list:
                         f.write(result.strip())
                         f.write("\n\n")
