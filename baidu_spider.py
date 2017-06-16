@@ -16,6 +16,7 @@ class Spiders(object):
         self.exclude_word_list = ()
         self.all_page = all_page
         self.result_key_list = []
+        self.expiration = datetime.datetime.now().date() - datetime.timedelta(days=1)
 
     def add_key_word(self, *args):
         self.key_word_list += args
@@ -78,7 +79,7 @@ class Spiders(object):
                     string += t.get_text()
                 reply_date = re.search(r'(\d{4}-\d{2}-\d{2})', string).group(1)
                 reply_date = datetime.datetime.strptime(reply_date, "%Y-%m-%d").date()
-                if reply_date < datetime.date(2017, 4, 15):
+                if self.expiration and reply_date < self.expiration:
                     continue
                 for content in tmp.contents:
                     mark = False
