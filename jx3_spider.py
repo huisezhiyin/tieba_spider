@@ -10,13 +10,13 @@ import os
 
 
 class Spiders(object):
-    def __init__(self, all_page=1):
+    def __init__(self):
         self.id_ = "thread_list"
         self.key_word_list = ()
         self.exclude_word_list = ()
-        self.all_page = all_page
+        self.all_page = 1
         self.result_key_list = []
-        self.expiration = datetime.datetime.now().date() - datetime.timedelta(days=1)
+        self.expiration = 1
 
     def add_key_word(self, *args):
         self.key_word_list += args
@@ -64,6 +64,7 @@ class Spiders(object):
             page_last_num = 1
         for page in xrange(page_last_num):
             post_url_now = "{0}?pn={1}".format(post_urls, page)
+            print "post page:{0}/{1}".format(page+1, page_last_num)
             response = requests.get(post_url_now)
             soup = BeautifulSoup(response.content, "lxml")
             reply_list = soup.find_all(class_="d_post_content_main ")
@@ -78,7 +79,8 @@ class Spiders(object):
                     string += t.get_text()
                 reply_date = re.search(r'(\d{4}-\d{2}-\d{2})', string).group(1)
                 reply_date = datetime.datetime.strptime(reply_date, "%Y-%m-%d").date()
-                if self.expiration and reply_date < self.expiration:
+                expiration_time = datetime.datetime.now().date() - datetime.timedelta(days=self.expiration)
+                if reply_date < expiration_time:
                     continue
                 for content in tmp.contents:
                     mark = False
@@ -112,7 +114,6 @@ class Spiders(object):
         return result_list
 
     def main_processor(self):
-        #检查文件夹
         if not os.path.exists("result"):
             os.makedirs("result")
         html_list = self.html_processor()
@@ -128,10 +129,7 @@ class Spiders(object):
                 print "post schedule: {0}/{1}".format(post_mark, len(post_url_list))
                 result_list = self.post_processor(post_url)
                 with open("result/result_{0}.txt".format(d), "a") as f:
-                    result_mark = 0
                     for result in result_list:
-                        result_mark += 1
-                        print "replay schedule: {0}/{1}".format(result_mark, len(result_list))
                         f.write(result.strip())
                         f.write("\n\n")
 
@@ -139,7 +137,9 @@ class Spiders(object):
 if __name__ == '__main__':
     start = datetime.datetime.now()
     s = Spiders()
-    s.add_key_word(u"情阅", u"毒姐")
+    s.all_page = 5
+    s.expiration = 5
+    s.add_key_word(u"娃娃菜", u"叽萝")
     s.add_exclude_word(u"收", u"蹲")
     s.main_processor()
     end = datetime.datetime.now()
