@@ -126,7 +126,7 @@ class Spiders(object):
 
 if __name__ == '__main__':
     start = datetime.datetime.now()
-    s = Spiders(all_page=5)
+    s = Spiders()
     s.add_key_word(u"情阅", u"毒姐")
     s.add_exclude_word(u"收", u"蹲")
     s.main_processor()
