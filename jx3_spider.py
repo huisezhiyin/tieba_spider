@@ -1,5 +1,4 @@
 # coding:utf-8
-
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -63,7 +62,6 @@ class Spiders(object):
         except:
             page_last_num = 1
         for page in xrange(page_last_num):
-            page += 1
             post_url_now = "{0}?pn={1}".format(post_urls, page)
             response = requests.get(post_url_now)
             soup = BeautifulSoup(response.content, "lxml")
@@ -115,12 +113,21 @@ class Spiders(object):
     def main_processor(self):
         html_list = self.html_processor()
         d = datetime.datetime.now()
+        html_mark = 0
         for html in html_list:
+            html_mark += 1
+            print "page schedule: {0}/{1}".format(html_mark, len(html_list))
             post_url_list = self.post_url_processor(html)
+            post_mark = 0
             for post_url in post_url_list:
+                post_mark += 1
+                print "post schedule: {0}/{1}".format(post_mark, len(post_url_list))
                 result_list = self.post_processor(post_url)
                 with open("result/result_{0}.txt".format(d), "a") as f:
+                    result_mark = 0
                     for result in result_list:
+                        result_mark += 1
+                        print "replay schedule: {0}/{1}".format(result_mark, len(result_list))
                         f.write(result.strip())
                         f.write("\n\n")
 
